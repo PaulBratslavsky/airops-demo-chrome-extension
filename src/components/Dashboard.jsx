@@ -63,8 +63,6 @@ export default function Dashboard() {
 
     const data = await loader(videoUrl, url, apiKey);
 
-    console.log(data, "from api call");
-
     setData(data);
     setVideoUrl("");
     setIsLoading(false);
@@ -73,27 +71,7 @@ export default function Dashboard() {
   return (
     <div>
       <div>
-        <div className="my-2">
-          <input
-            className="appearance-none block w-full p-3 leading-5 text-lg text-violet-900 border border-gray-200 rounded-lg shadow-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50"
-            type="text"
-            placeholder={"Enter YouTube URL"}
-            onChange={(e) => setVideoUrl(e.target.value)}
-            value={videoUrl}
-          />
-
-          {errorMessage && <p className="text-red-400 my-2">{errorMessage}</p>}
-        </div>
-
-        <button
-          className="bg-violet-600 text-white px-3 py-2 mt-2 rounded-md"
-          onClick={handleSubmit}
-          disabled={isLoading}
-        >
-          {isLoading ? "Generating post..." : "Generate Blog Post"}
-        </button>
-
-        {data && (
+        {data ? (
           <div className="my-8">
             <a href={import.meta.env.VITE_POST_URL + "/" + data.slug}>
               <h2 className="text-xl font-bold mb-4 text-violet-400">
@@ -102,13 +80,38 @@ export default function Dashboard() {
             </a>
             <MarkdownText markdown={data.description} />
             <a
-              className="bg-violet-600 text-white px-3 py-2 mt-2 rounded-md"
+              className="block bg-violet-600 text-white px-3 py-2 my-2 rounded-md"
               target="_blank"
               rel="noreferrer"
               href={import.meta.env.VITE_POST_URL + "/" + data.slug}
             >
               Read more
             </a>
+            <button className="bg-none text-gray-400 my-2" onClick={() => setData(null)}>create new post</button>
+          </div>
+        ) : (
+          <div>
+            <div className="my-2">
+              <input
+                className="appearance-none block w-full p-3 leading-5 text-lg text-violet-900 border border-gray-200 rounded-lg shadow-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50"
+                type="text"
+                placeholder={"Enter YouTube URL"}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                value={videoUrl}
+              />
+
+              {errorMessage && (
+                <p className="text-red-400 my-2">{errorMessage}</p>
+              )}
+            </div>
+
+            <button
+              className="bg-violet-600 text-white px-3 py-2 mt-2 rounded-md"
+              onClick={handleSubmit}
+              disabled={isLoading}
+            >
+              {isLoading ? "Generating post..." : "Generate Blog Post"}
+            </button>
           </div>
         )}
       </div>
